@@ -319,7 +319,7 @@ window.addEventListener('message', ({ data: message }) => {
 	if (message.type === 'transcript') { transcript(message.entries); }
 	if (message.type === 'approval') { $('approval').value = message.mode; }
 	if (message.type === 'connection') {
-		$('connection').textContent = message.online ? L.connected : L.offline;
+		$('connection').textContent = message.label || (message.online ? L.connected : L.offline);
 		$('connection').title = $('connection').textContent; $('connection').setAttribute('aria-label', $('connection').textContent); $('connection').dataset.online = String(message.online);
 		if (message.model) { $('model').value = message.model; }
 	}
@@ -338,6 +338,7 @@ window.addEventListener('message', ({ data: message }) => {
 		$('send').disabled = false; $('send').textContent = busy ? L.cancel : L.send;
 		$('send').classList.toggle('stopAgent', busy); $('send').setAttribute('aria-label', busy ? L.cancel : L.send);
 		$('model').disabled = busy; $('history').disabled = busy;
+		if ($('provider')) { $('provider').disabled = busy; }
 		$('reset').disabled = busy; $('cancel').disabled = !busy;
 		if (!busy && current?.dataset.pending) { if (activity) { current.replaceChildren(); } else { response?.remove(); resetResponse(); } }
 	}
@@ -347,6 +348,12 @@ window.addEventListener('message', ({ data: message }) => {
 		document.body.classList.toggle('wrapCode', !!message.wrap);
 		for (const details of document.querySelectorAll('.responseActivity')) { details.open = !!message.detailed; }
 		if ($('localUsage')) { $('localUsage').hidden = !message.showUsage; }
+	}
+	if (message.type === 'providerState') {
+		if ($('provider')) { $('provider').value = message.provider; }
+		$('model').value = message.model || ''; $('model').setAttribute('aria-label', message.provider === 'ollama' ? 'Ollama model' : 'API model ID');
+		$('installedModelChoices')?.replaceChildren(); if ($('installModels')) { $('installModels').hidden = message.provider !== 'ollama'; }
+		const hint = document.querySelector('.footerStatus .hint'); if (hint) { hint.textContent = `${message.provider === 'ollama' ? 'Local' : message.provider === 'openai' ? 'OpenAI API' : 'Claude API'} · Ctrl+Enter`; }
 	}
 	if (message.type === 'usageSummary') { const usage = message.usage; if ($('localUsage')) { $('localUsage').textContent = `${usage.requests} requests · +${usage.linesAdded} / −${usage.linesRemoved} lines`; $('localUsage').hidden = !preferences.showUsage; } }
 	if (message.type === 'modelChoices') {
@@ -389,3 +396,6 @@ window.addEventListener('message', ({ data: message }) => {
 post('ready');
 
 if (document.getElementById('aethrixSettings')) { document.getElementById('aethrixSettings').onclick = () => post('settings'); }
+if ($('provider')) { $('provider').onchange = () => post('provider', { mode: $('provider').value }); }
+if ($('claudeTerminal')) { $('claudeTerminal').onclick = () => post('agentTerminal', { action: 'claude' }); }
+if ($('codexTerminal')) { $('codexTerminal').onclick = () => post('agentTerminal', { action: 'codex' }); }

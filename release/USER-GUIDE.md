@@ -1,6 +1,6 @@
 # Aethrix
 
-Open Aethrix.exe or the Aethrix taskbar shortcut. Ollama must be running with your selected local model.
+Open Aethrix.exe or the Aethrix taskbar shortcut. For local inference, Ollama must be running with your selected model. Optional API providers are configured in Settings → Providers.
 
 The chat header has a **Tools** menu for search, builds, models, history search, queues, and driver tools. **Context & Permissions** above the message box contains attachments, active-file sharing, and auto-approval. The mode selector sits beside **Queue** and **Send**. Hover over the connection dot to check its status.
 
@@ -75,3 +75,15 @@ Source Control detects installed Git and configures the native Git extension. Op
 Aethrix local inline suggestions are opt-in under Code Intelligence and use the selected Ollama model. They can compete with chat for model resources. They run only in trusted file workspaces; Tab accepts a suggestion. Auto-import and format settings control the actual editor/language service and require a compatible formatter where applicable.
 
 The network page configures a loopback Ollama address, editor proxy, local preview destination and a connection check. The editor proxy applies to compatible editor/download features; Ollama uses its own local address directly. Beta offers local log viewing and a counters-only usage export.
+
+## Claude, Codex and API Connections
+
+Version 0.9 adds Settings → Providers and Claude Terminal / Codex Terminal shortcuts above the chat model picker. Terminal agents are independent official CLIs running in the open project. Open and trust a project first. Sign In starts the CLI’s own login flow. Install CLI opens the official installation command without executing it; press Enter yourself after reviewing it, complete installation, then refresh Providers. No account tokens are imported into Aethrix. The CLI’s own permissions, billing and cancellation apply; use Ctrl+C in its terminal to stop it.
+
+For API-backed Aethrix chat, save an OpenAI or Anthropic API key with Save API Key. Keys are entered in a password prompt and stored in editor SecretStorage, never in the page, settings JSON, chat records or terminal commands. Load Available Models checks credentials by listing models; choose an appropriate API model ID in API Models, then select OpenAI API or Claude API as Chat Provider. OpenAI models must support Responses with function tools; Claude models use Messages. API availability depends on the key/account and selected model. No paid API request is sent automatically when saving a key or switching providers.
+
+Selecting an API provider requires a notice acknowledging that prompts, selected source context and tool results go to that provider, with API charges separate from CLI subscriptions. Start a new conversation if earlier context should not be shared. API chat retains Aethrix approval modes, native diffs, Stop, recovery and tool limits. Checkpoints, queued requests and saved plans retain their request provider/model. Existing records without provider metadata default to Ollama rather than being silently routed to an API. API streams are accepted only when complete; incomplete tool calls are not executed. Provider errors do not echo credential-bearing response bodies.
+
+Use Model for an installed local model switches chat back to Ollama. Inline suggestions remain local Ollama requests even when chat uses an API. Usage counters track Aethrix API tokens when reported, but do not track independent Claude/Codex terminal sessions or provider billing totals. API context/output limits are provider-specific; the Context Length preference controls local Ollama.
+
+Official references: https://learn.chatgpt.com/docs/auth · https://developers.openai.com/api/docs/guides/function-calling · https://code.claude.com/docs/en/authentication · https://code.claude.com/docs/en/setup · https://platform.claude.com/docs/en/build-with-claude/streaming

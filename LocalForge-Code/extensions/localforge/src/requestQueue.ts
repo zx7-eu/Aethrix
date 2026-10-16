@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { randomUUID } from 'node:crypto';
-export interface QueuedRequest { id: string; prompt: string; chatId: string; files: string[]; state: 'queued' | 'running' | 'done' | 'interrupted' | 'failed'; created: string; error?: string; mode?: import('./workflow').Mode }
+export interface QueuedRequest { provider?: import('./cloudProviders').Provider; model?: string; id: string; prompt: string; chatId: string; files: string[]; state: 'queued' | 'running' | 'done' | 'interrupted' | 'failed'; created: string; error?: string; mode?: import('./workflow').Mode }
 export interface QueueState { paused: boolean; items: QueuedRequest[] }
 /** Restore queue contents without resuming execution after a crash or editor restart. */
 export function restoreQueue(saved: unknown): QueueState {

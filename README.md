@@ -4,6 +4,13 @@ A free Windows coding editor with a local Ollama assistant, built on the MIT-lic
 
 **[Download the Windows EXE and setup folder](https://github.com/zx7-eu/Aethrix/releases/latest)** · [Requirements](release/REQUIREMENTS.md) · [First run](release/START-HERE.md) · [User guide](USER-GUIDE.md) · [Build from source](BUILDING.md)
 
+## New in 0.9.0
+
+- Open Claude Code or Codex in an integrated terminal, with official sign-in and installation helpers.
+- Optional OpenAI and Claude API chat, secure API-key storage, available-model discovery and a provider selector.
+- API chat uses the existing approval, Stop, queue and recovery controls. Queued requests and plans retain their provider and model.
+- Local Ollama remains the default. API usage requires your own key, access and billing; CLI sessions use their own authentication and permissions.
+
 ## New in 0.8.0
 
 - A separate Aethrix Settings page with a top-left chat gear and persistent preferences.
@@ -28,7 +35,7 @@ This is a particular combination of features, not a claim that every individual 
 
 ## Choose your download
 
-**Just use the app:** get `Aethrix-0.8.0-windows-x64.zip` from Releases, extract it, and read `START-HERE.md`. It contains `Aethrix.exe`, requirements, official dependency links and license notices. A separate `Aethrix.exe` asset is also available. You do not need Node.js, .NET or a source checkout to run the editor.
+**Just use the app:** get `Aethrix-0.9.0-windows-x64.zip` from Releases, extract it, and read `START-HERE.md`. It contains `Aethrix.exe`, requirements, official dependency links and license notices. A separate `Aethrix.exe` asset is also available. You do not need Node.js, .NET or a source checkout to run the editor.
 
 **Read or build the source:** browse `LocalForge-Code/` and `LocalForge-Packaging/`, or use GitHub's source download. Build prerequisites and packaging steps are in [BUILDING.md](BUILDING.md). Large generated binaries are release assets rather than Git-tracked source files.
 
@@ -36,11 +43,11 @@ This is a particular combination of features, not a claim that every individual 
 
 The distributed build targets **Windows 10 22H2 or newer, x64**; Windows 11 is recommended. Allow at least 4 GB free for the editor download/extraction and additional space for Ollama and models. For useful local coding models, 16 GB system RAM is a practical starting point; 32 GB and a compatible dedicated GPU allow larger choices. Smaller models can run with less memory. These are practical guidelines, not benchmarked minimums.
 
-Install [Ollama for Windows](https://ollama.com/download/windows) separately for AI. Models are separate downloads, with their own licenses, and can require many GB. Compilers, the .NET SDK, CMake/Ninja, Windows SDK/WDK and WinDbg are needed only for the development tasks that use them. See the full [requirements list](release/REQUIREMENTS.md).
+For local AI, install [Ollama for Windows](https://ollama.com/download/windows) separately. Alternatively, configure an OpenAI or Claude API key in Settings → Providers, or launch an installed Claude Code/Codex CLI. Models are separate downloads, with their own licenses, and can require many GB. Compilers, the .NET SDK, CMake/Ninja, Windows SDK/WDK and WinDbg are needed only for the development tasks that use them. See the full [requirements list](release/REQUIREMENTS.md).
 
 ## Privacy and permissions
 
-The assistant uses a locally running Ollama server by default. Prompts, files and tool results are sent to the endpoint you configure; use a local endpoint and local model for local inference. Aethrix does not bundle your personal chats, credentials, projects, or model weights. Chats and settings are saved in your own Windows profile.
+The assistant uses a locally running Ollama server by default. Prompts, files and tool results are sent to the endpoint you configure; use a local endpoint and local model for local inference. Aethrix does not bundle your personal chats, credentials, projects, or model weights. Chats and settings are saved in your own Windows profile. Selecting an API provider sends conversation context, supplied code and tool results to that provider. API keys use the editor SecretStorage; CLI credentials remain managed by the official CLI. Independent CLI sessions are stopped in their terminal with Ctrl+C.
 
 This is not an air-gapped application: downloads, model registry checks, extensions, updates and some inherited editor features can use the network. Seeded editor telemetry is off; installed extensions and external tools have their own behavior. File and command tools run with your Windows user permissions. Start with **Ask first** and review commands before enabling automatic approval. File undo does not reverse command side effects.
 
@@ -57,7 +64,7 @@ This is not an air-gapped application: downloads, model registry checks, extensi
 
 The public repository is read-only for visitors: only people explicitly granted write access can change this repository. No public write access is granted by publishing it. The source remains under MIT and applicable third-party licenses, which permit copying, forking and modification; “read-only” does not revoke those rights. Contributions are currently maintainer-managed; see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-Aethrix is independently branded and is not an official Microsoft Visual Studio Code distribution. The editor source derives from [microsoft/vscode](https://github.com/microsoft/vscode), commit `743b7f939f37a9c2a59f1e2177335db6e5735a1f`. Upstream MIT notices and third-party licenses are preserved. See [LICENSE.txt](LICENSE.txt), [ThirdPartyNotices.txt](ThirdPartyNotices.txt), and [NOTICE.md](NOTICE.md). Assistant version: **0.8.0**; editor base: **1.143.0**.
+Aethrix is independently branded and is not an official Microsoft Visual Studio Code distribution. The editor source derives from [microsoft/vscode](https://github.com/microsoft/vscode), commit `743b7f939f37a9c2a59f1e2177335db6e5735a1f`. Upstream MIT notices and third-party licenses are preserved. See [LICENSE.txt](LICENSE.txt), [ThirdPartyNotices.txt](ThirdPartyNotices.txt), and [NOTICE.md](NOTICE.md). Assistant version: **0.9.0**; editor base: **1.143.0**.
 
 ## Aethrix Settings
 

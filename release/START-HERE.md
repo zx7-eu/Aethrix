@@ -6,7 +6,7 @@
 4. Keep **Ask first** initially. Trust a project when you want to enable builds, commands or edits. Review requested commands and file diffs.
 5. Ask a question or choose Normal, Plan, Debug, Multi-task or Ask. See `USER-GUIDE.md` for detailed controls.
 
-The editor works without Ollama; AI requests require it and a compatible downloaded model. No Aethrix API key or subscription is required. Your selected model has its own license.
+The editor works without Ollama. Local AI requires Ollama and a downloaded model. Alternatively, open Settings → Providers for OpenAI/Claude API chat or Claude Code/Codex terminals. API chat needs your own key, model access and billing; terminal agents need their official CLI and sign-in. No Aethrix subscription is required. Your selected model has its own license.
 
 For C++, install a compiler and the required SDK; for C#, install the .NET SDK; for drivers, install matching Windows SDK/WDK and Visual Studio C++ tools. The release includes editor integrations, not those SDKs. See `REQUIREMENTS.md` and the official shortcuts in `requirements/`.
 

@@ -9,7 +9,7 @@ import type { Message } from './ollama';
 import type { Checkpoint } from './checkpoint';
 
 export interface TranscriptEntry { role: 'user' | 'assistant' | 'tool' | 'info' | 'error'; text: string }
-export interface ChatSession { id: string; title: string; workspace: string; createdAt: string; updatedAt: string; entries: TranscriptEntry[]; context: Message[]; checkpoint?: Checkpoint; mode?: import('./workflow').Mode; question?: { text: string; prompt: string; includeFile: boolean }; plan?: { path: string; model: string } }
+export interface ChatSession { id: string; title: string; workspace: string; createdAt: string; updatedAt: string; entries: TranscriptEntry[]; context: Message[]; checkpoint?: Checkpoint; mode?: import('./workflow').Mode; question?: { text: string; prompt: string; includeFile: boolean }; plan?: { path: string; model: string; provider?: import('./cloudProviders').Provider } }
 
 /** Derives a stable, readable title without an additional model request. */
 export function titleFromPrompt(prompt: string, fallback = 'New Conversation'): string {

@@ -6,8 +6,8 @@
 import { recoverToolCalls, visibleResponseText } from './toolProtocol';
 import { ollamaEndpoint } from './localRuntime';
 
-export interface ToolCall { function: { name: string; arguments: Record<string, string> } }
-export interface Message { role: 'system' | 'user' | 'assistant' | 'tool'; content: string; tool_calls?: ToolCall[]; tool_name?: string; usage?: { inputTokens: number; outputTokens: number } }
+export interface ToolCall { id?: string; function: { name: string; arguments: Record<string, string> } }
+export interface Message { role: 'system' | 'user' | 'assistant' | 'tool'; content: string; tool_calls?: ToolCall[]; tool_name?: string; tool_call_id?: string; provider?: string; providerItems?: object[]; usage?: { inputTokens: number; outputTokens: number } }
 export interface Tool { type: 'function'; function: { name: string; description: string; parameters: { type: 'object'; properties: Record<string, { type: string; description?: string }>; required: string[] } } }
 interface Chunk { error?: string; done?: boolean; done_reason?: string; prompt_eval_count?: number; eval_count?: number; message?: { content?: string; thinking?: string; tool_calls?: ToolCall[] } }
 

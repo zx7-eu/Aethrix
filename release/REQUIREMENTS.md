@@ -30,3 +30,11 @@ The release includes the Code - OSS editor, Electron, Aethrix assistant, Markdow
 ## Building the editor source
 
 See `BUILDING.md` in the repository. Source builds require Git, Node 24.18.0 or newer in the 24.x line, npm below 13, Python, Visual Studio C++ build tools, Windows SDK and additional build disk space. NSIS 3 is needed to recreate the single-EXE launcher. These tools are not required merely to run the prebuilt editor.
+
+## Optional API and terminal providers
+
+Local Ollama is one AI option. OpenAI or Claude API chat instead requires internet, your own provider API key, access to a compatible tool-capable model and any required API billing. Save keys through Settings → Providers; keys are kept in editor SecretStorage. Conversation context and tool results are sent to the selected API provider.
+
+Claude Code and Codex terminal sessions require their official CLI installed and signed in with an eligible account or supported API setup. The settings page offers installation commands for review and official sign-in commands. They are independent terminal agents: their permissions and billing apply, and Ctrl+C stops them. Aethrix Stop controls the built-in assistant. Terminal-agent usage is not included in Aethrix usage counters.
+
+Official setup: https://code.claude.com/docs/en/setup and https://developers.openai.com/codex/cli/ .

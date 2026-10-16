@@ -18,7 +18,7 @@ const assert = require('node:assert/strict');
 		const send = data => page.evaluate(data => window.dispatchEvent(new MessageEvent('message', { data })), data);
 		const snapshot = { type: 'settingsState', fields, hidden: [], model: 'qwen3-coder:30b', busy: false, usage: { total: { requests: 12, linesAdded: 55, linesRemoved: 8, inputTokens: 100 }, today: { requests: 4 } } };
 		await send(snapshot);
-		assert.equal(await page.locator('#tabs button').count(), 8); assert.equal(await page.getByRole('button', { name: /Cloud Agents|Voice|Customize|Docs/ }).count(), 0);
+		assert.equal(await page.locator('#tabs button').count(), 9); assert.equal(await page.getByRole('button', { name: /Cloud Agents|Voice|Customize|Docs/ }).count(), 0);
 		await page.getByRole('checkbox', { name: 'Minimap', exact: true }).uncheck(); assert.deepEqual(await page.evaluate(() => window.posts.at(-1)), { type: 'set', key: 'editor.minimap.enabled', value: false }); await send(snapshot);
 		await page.locator('[data-page="usage"]').click(); assert.match(await page.locator('.stats').textContent(), /55/); assert.equal(await page.getByRole('button', { name: /Upgrade|Buy credits/ }).count(), 0);
 		await page.locator('[data-page="models"]').click();
@@ -31,7 +31,7 @@ const assert = require('node:assert/strict');
 		await page.locator('[data-page="source"]').click(); await send({ type: 'settingsGit', branch: 'main', root: 'C:/example', files: [{ path: '<img onerror=alert(1)>.cpp', index: ' ', worktree: 'M' }] });
 		await page.getByRole('button', { name: 'Stage All', exact: true }).click(); assert.deepEqual(await page.evaluate(() => window.posts.at(-1)), { type: 'git', action: 'stage' }); assert.equal(await page.locator('#body img').count(), 0);
 		await page.locator('[data-page="agents"]').click(); await page.getByRole('checkbox', { name: 'Code Block Word Wrap', exact: true }).check(); assert.equal(await page.evaluate(() => window.posts.at(-1).key), 'localforge.codeBlockWrap'); await send(snapshot);
-		await page.locator('[data-page="general"]').click(); await page.screenshot({ path: path.join(__dirname, 'Aethrix-settings.png'), fullPage: true });
+		await page.locator('[data-page="providers"]').click(); await page.getByRole('button', { name: 'Save API Key', exact: true }).first().click(); assert.deepEqual(await page.evaluate(() => window.posts.at(-1)), { type: 'provider', provider: 'openai', action: 'key' }); assert.equal(await page.locator('input[type=password]').count(), 0); await page.getByRole('button', { name: 'Open Terminal', exact: true }).first().click(); assert.equal(await page.evaluate(() => window.posts.at(-1).name), 'claude'); await page.locator('[data-page="general"]').click(); await page.screenshot({ path: path.join(__dirname, 'Aethrix-settings.png'), fullPage: true });
 		await page.setViewportSize({ width: 720, height: 700 }); assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
 		assert.deepEqual(errors, []); console.log('Settings navigation, controls, usage, model checks, source-control actions, safe rendering and responsive layout passed.');
 	} finally { await browser.close(); }

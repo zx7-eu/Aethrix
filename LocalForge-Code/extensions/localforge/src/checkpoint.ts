@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import type { Message, ToolCall } from './ollama';
-export interface Checkpoint { prompt: string; workflow?: import('./workflow').Workflow; model: string; messages: Message[]; requestId?: string; completed: number; pending?: ToolCall; updated: string; inline?: { path: string; start: number; end: number; hash: string } }
+export interface Checkpoint { provider?: import('./cloudProviders').Provider; prompt: string; workflow?: import('./workflow').Workflow; model: string; messages: Message[]; requestId?: string; completed: number; pending?: ToolCall; updated: string; inline?: { path: string; start: number; end: number; hash: string } }
 
 /** Restore context without automatically replaying an unfinished or uncertain tool call. */
 export function recoveryMessages(checkpoint: Checkpoint): Message[] {

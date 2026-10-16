@@ -35,5 +35,10 @@
   "commitAttributionDescription": "Configure commit attribution in Aethrix Settings.",
   "inlineCompletionDescription": "Configure inline completion in Aethrix Settings.",
   "suggestInCommentsDescription": "Configure suggest in comments in Aethrix Settings.",
-  "whitespaceSuggestionsDescription": "Configure whitespace suggestions in Aethrix Settings."
+  "whitespaceSuggestionsDescription": "Configure whitespace suggestions in Aethrix Settings.",
+  "claudeTerminalTitle": "Open Claude Code Terminal",
+  "codexTerminalTitle": "Open Codex Terminal",
+  "providerDescription": "Choose local Ollama, OpenAI API or Claude API. API usage sends context to the selected provider and is billed separately.",
+  "openaiModelDescription": "OpenAI model ID supporting Responses and function tools. Configure credentials in Providers.",
+  "anthropicModelDescription": "Claude API model ID. Configure credentials in Providers."
 }

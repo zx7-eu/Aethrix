@@ -43,13 +43,13 @@ Section
     FileOpen $0 "$AppDir\build-id.txt" r
     FileRead $0 $CachedBuild
     FileClose $0
-    ${If} $CachedBuild != "1.143.0-aethrix-settings-0.8.0-20261016"
+    ${If} $CachedBuild != "1.143.0-aethrix-providers-0.9.0-20261016"
     Banner::show /NOUNLOAD "Preparing Aethrix. This can take a moment."
     SetOutPath "$AppDir"
     File /r /x "*.map" /x "*.pdb" "${APPDIR}\*"
     Banner::destroy
     FileOpen $0 "$AppDir\build-id.txt" w
-    FileWrite $0 "1.143.0-aethrix-settings-0.8.0-20261016"
+    FileWrite $0 "1.143.0-aethrix-providers-0.9.0-20261016"
     FileClose $0
     ${EndIf}
 

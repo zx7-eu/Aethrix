@@ -4,7 +4,8 @@ const labels = window.settingsLabels;
 const t = value => labels[value] || value;
 const post = (type, extra = {}) => api.postMessage({ type, ...extra });
 const $ = id => document.getElementById(id);
-const pages = { general: ['⚙', 'General'], usage: ['◷', 'Plan & Usage'], agents: ['◇', 'Agents'], models: ['▧', 'Models'], source: ['⑂', 'Source Control'], network: ['◎', 'Browser & Network'], intelligence: ['⌘', 'Code Intelligence'], beta: ['⌁', 'Beta'] };
+const pages = { general: ['⚙', 'General'], usage: ['◷', 'Plan & Usage'], agents: ['◇', 'Agents'], providers: ['⇄', 'Providers'], models: ['▧', 'Models'], source: ['⑂', 'Source Control'], network: ['◎', 'Browser & Network'], intelligence: ['⌘', 'Code Intelligence'], beta: ['⌁', 'Beta'] };
+const apiModels = {};
 let page = api.getState()?.page || 'general';
 let state = { fields: [], hidden: [], usage: null, busy: false };
 let catalog;
@@ -33,6 +34,8 @@ function preference(parent, field) {
 	else if (field.options) { control = node('select'); for (const value of field.options) { const option = node('option', value); option.value = value; control.append(option); } control.value = field.value; }
 	else { control = node('input'); control.type = field.kind === 'number' ? 'number' : 'text'; control.value = field.value; if (field.min !== undefined) { control.min = field.min; control.max = field.max; } }
 	control.setAttribute('aria-label', field.title); control.dataset.setting = field.key;
+	if (field.key === 'localforge.provider') { for (const option of control.options) { option.textContent = ({ ollama: 'Ollama · Local', openai: 'OpenAI API', anthropic: 'Claude API' })[option.value]; } }
+	if (['localforge.openaiModel', 'localforge.anthropicModel'].includes(field.key)) { const provider = field.key.includes('openai') ? 'openai' : 'anthropic'; const list = node('datalist'); list.id = 'apiModels-' + provider; for (const name of apiModels[provider] || []) { const option = node('option'); option.value = name; list.append(option); } parent.append(list); control.setAttribute('list', list.id); }
 	control.onchange = () => { control.disabled = true; post('set', { key: field.key, value: field.kind === 'boolean' ? control.checked : field.kind === 'number' ? Number(control.value) : control.value }); };
 	row(parent, field.title, field.description, control);
 }
@@ -44,16 +47,34 @@ function draw() {
 	if (page === 'usage') { usage(body); return; }
 	if (page === 'models') { models(body); return; }
 	if (page === 'general') { const section = card(body, 'Preferences'); for (const [label, action] of [['Editor Settings', 'editor'], ['Keyboard Shortcuts', 'keys'], ['Import VS Code Preferences', 'import']]) { row(section, label, '', button('Open', () => post('command', { action }))); } }
-	if (page === 'agents') { const section = card(body, 'Default Model'); row(section, state.model || 'No model selected', 'Choose an installed local model in Models. The selected model is used for new requests.', button('Models', () => navigate('models'))); }
+	if (page === 'agents') { const section = card(body, 'Default Model'); row(section, state.model || 'No model selected', 'Choose your chat provider and model in Providers. Install local models in Models.', button('Providers', () => navigate('providers'))); }
 	if (page === 'source') { source(body); }
+	if (page === 'providers') { providers(body); }
 	let group; let last;
 	for (const field of state.fields.filter(item => item.page === page)) { if (field.section !== last) { group = card(body, field.section); last = field.section; } preference(group, field); }
 	if (page === 'network') { const section = card(body, 'Diagnostics'); row(section, 'Test Ollama Connection', '', button('Open', () => post('command', { action: 'test' }))); row(section, 'Open Local Preview', '', button('Open', () => post('command', { action: 'preview' }))); row(section, 'Download Services', 'Model checks and weights: registry.ollama.ai. Extensions: open-vsx.org and publishers’ download hosts. Local prompts go to your configured loopback server.'); }
 	if (page === 'intelligence') { const section = card(body, 'Language Extensions'); row(section, 'Open Extension Manager', 'Install compatible language servers, debuggers and formatters from Open VSX.', button('Open', () => post('command', { action: 'extensions' }))); }
 	if (page === 'beta') { const section = card(body, 'Local Diagnostics'); row(section, 'Open Logs', 'Inspect local editor and extension logs.', button('Open', () => post('command', { action: 'logs' }))); row(section, 'Export Usage', 'Save counters as JSON. No prompts or source code are included.', button('Save', () => post('command', { action: 'export' }))); }
 }
+function providers(parent) {
+	const stateInfo = state.connections || { cli: {}, keys: {} };
+	const agents = card(parent, 'Coding Agent Terminals');
+	for (const name of ['claude', 'codex']) {
+		const controls = node('div', undefined, 'actions');
+		for (const [label, action] of [['Open Terminal', 'open'], ['Sign In', 'login'], ['Install CLI', 'setup']]) { controls.append(button(label, () => post('provider', { name, action }))); }
+		row(agents, name === 'claude' ? 'Claude Code' : 'Codex CLI', `${stateInfo.cli[name] ? 'CLI detected' : 'CLI not found'} · Sign in through the official agent. Installation opens a command for you to run.`, controls);
+	}
+	agents.append(node('p', 'Terminal agents have their own approvals, sessions and account billing. Aethrix Stop and its usage counters apply to Aethrix chat, not independent terminal agents. Account tokens are not imported.', 'muted'));
+	const apis = card(parent, 'API Connections');
+	for (const provider of ['openai', 'anthropic']) {
+		const controls = node('div', undefined, 'actions');
+		for (const [label, action] of [['Save API Key', 'key'], ['Remove Key', 'remove'], ['Load Available Models', 'models']]) { const control = button(label, () => post('provider', { provider, action })); control.disabled = state.busy; controls.append(control); }
+		row(apis, provider === 'openai' ? 'OpenAI API' : 'Claude API', stateInfo.keys[provider] ? 'Key saved securely. Load models to check API access.' : 'No key saved. Uses the provider API, not subscription account tokens.', controls);
+	}
+	apis.append(node('p', 'Keys are entered in a password prompt and stored in editor SecretStorage. They are never sent to this page. Selecting an API provider sends prompts, selected code and tool results to that provider; API charges apply. Start a new chat if you do not want to share earlier conversation context.', 'muted'));
+}
 function usage(parent) {
-	const section = card(parent); row(section, 'Local · Free', 'No subscription or usage cap. These counters are stored on this PC.');
+	const section = card(parent); row(section, 'Tracking on This PC', 'Aethrix counters are local. API and terminal providers have their own billing and usage limits.');
 	const controls = node('div', undefined, 'actions'); controls.append(button('Today', () => { period = 'today'; draw(); }), button('All Time', () => { period = 'total'; draw(); }), button('Refresh', () => post('refresh')), button('Export Usage', () => post('command', { action: 'export' }))); parent.append(controls);
 	const values = state.usage?.[period] || {}; const grid = node('div', undefined, 'stats'); parent.append(grid);
 	for (const [key, title] of Object.entries({ requests: 'Requests', completed: 'Completed', canceled: 'Canceled', failed: 'Failed', tools: 'Tool Calls', inputTokens: 'Input Tokens', outputTokens: 'Output Tokens', seconds: 'Minutes Running', filesEdited: 'File Edit Operations', linesAdded: 'Lines Added', linesRemoved: 'Lines Removed' })) { const tile = node('section', undefined, 'stat'); tile.append(node('span', title), node('b', key === 'seconds' ? ((values[key] || 0) / 60).toFixed(1) : (values[key] || 0).toLocaleString())); grid.append(tile); }
@@ -89,6 +110,7 @@ function source(parent) {
 }
 window.addEventListener('message', ({ data }) => {
 	if (data.type === 'settingsState') { state = data; draw(); }
+	if (data.type === 'settingsApiModels') { apiModels[data.provider] = data.models; notice(`${data.models.length} API models available. Choose a compatible text/code model in API Models.`); }
 	if (data.type === 'settingsModels') { catalog = data; if (page === 'models') { draw(); } }
 	if (data.type === 'settingsGit') { git = data; if (page === 'source') { draw(); } }
 	if (data.type === 'settingsSaved') { notice(t('Saved')); }

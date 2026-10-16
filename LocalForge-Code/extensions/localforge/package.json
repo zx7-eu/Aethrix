@@ -3,7 +3,7 @@
   "displayName": "%displayName%",
   "description": "%description%",
   "publisher": "localforge",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "license": "MIT",
   "engines": {
     "vscode": "^1.110.0"
@@ -95,6 +95,18 @@
         "title": "%settingsTitle%",
         "category": "Aethrix",
         "icon": "$(gear)"
+      },
+      {
+        "command": "localforge.claudeTerminal",
+        "title": "%claudeTerminalTitle%",
+        "category": "Aethrix",
+        "icon": "$(terminal)"
+      },
+      {
+        "command": "localforge.codexTerminal",
+        "title": "%codexTerminalTitle%",
+        "category": "Aethrix",
+        "icon": "$(terminal)"
       }
     ],
     "viewsContainers": {
@@ -238,6 +250,26 @@
           "type": "boolean",
           "default": false,
           "description": "%whitespaceSuggestionsDescription%"
+        },
+        "localforge.provider": {
+          "type": "string",
+          "default": "ollama",
+          "description": "%providerDescription%",
+          "enum": [
+            "ollama",
+            "openai",
+            "anthropic"
+          ]
+        },
+        "localforge.openaiModel": {
+          "type": "string",
+          "default": "",
+          "description": "%openaiModelDescription%"
+        },
+        "localforge.anthropicModel": {
+          "type": "string",
+          "default": "",
+          "description": "%anthropicModelDescription%"
         }
       }
     },

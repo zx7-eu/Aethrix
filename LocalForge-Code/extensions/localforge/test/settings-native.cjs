@@ -5,7 +5,7 @@ const fs = require('node:fs/promises');
 const path = require('node:path');
 exports.run = async () => {
 	const extension = vscode.extensions.getExtension('localforge.localforge'); await extension.activate();
-	assert.equal(extension.packageJSON.version, '0.8.0');
+	assert.equal(extension.packageJSON.version, '0.9.0');
 	const commands = await vscode.commands.getCommands(true); assert.ok(commands.includes('localforge.settings'));
 	await vscode.commands.executeCommand('localforge.settings');
 	await vscode.workspace.getConfiguration('localforge').update('chatFontSize', 16, vscode.ConfigurationTarget.Global);

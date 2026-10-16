@@ -81,3 +81,5 @@ footer{padding:10px 12px 9px;border-top:0;flex-shrink:0}
 #send.stopAgent{background:#9e3434;color:#fff;border:1px solid #bd5151;min-width:64px}#send.stopAgent:hover{background:#b03b3b}#send.stopAgent:disabled{opacity:.65}
 
 #aethrixSettings{font-size:17px;flex-shrink:0;padding:4px 7px;background:transparent;border-color:transparent}.wrapCode .markdown pre,.wrapCode .markdown pre code{white-space:pre-wrap;overflow-wrap:anywhere}#localUsage{font-size:9px;color:var(--vscode-descriptionForeground);margin-left:5px}
+
+.providerRow{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin:4px 0 8px}.providerRow select{font-size:11px;flex:1;min-width:110px}.providerRow button{font-size:10px;background:transparent;padding:4px 6px}
