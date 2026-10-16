@@ -1,0 +1,15 @@
+/release/*.exe
+/release/*.zip
+/release/SHA256SUMS.txt
+/VSCode-win32-x64/
+/.build/
+/LocalForge-Packaging/cpp-downloads/
+**/node_modules/
+**/out/
+**/dist/
+**/*.tsbuildinfo
+**/.localforge-profile/
+**/.localforge-test-profile/
+**/.localforge-extensions/
+/LocalForge-Code/extensions/copilot/test/simulation/cache/**/*.sqlite
+/LocalForge-Code/extensions/copilot/test/simulation/cache/*.sqlite

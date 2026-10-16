@@ -1,0 +1,38 @@
+[
+  {
+    "tag": "0.6.0",
+    "url": "https://github.com/clangd/vscode-clangd/releases/download/0.6.0/vscode-clangd-0.6.0.vsix",
+    "folder": "aethrix-clangd",
+    "kind": "extension",
+    "repo": "clangd/vscode-clangd",
+    "asset": "vscode-clangd-0.6.0.vsix",
+    "sha256": "7137240A84B7948B07F58CD99B3D1961F5E6223E92641521CE422588F422C42A"
+  },
+  {
+    "tag": "v1.24.42",
+    "url": "https://github.com/microsoft/vscode-cmake-tools/releases/download/v1.24.42/cmake-tools.vsix",
+    "folder": "aethrix-cmake",
+    "kind": "extension",
+    "repo": "microsoft/vscode-cmake-tools",
+    "asset": "cmake-tools.vsix",
+    "sha256": "14D6DF3A11619915D5A1FA2A46CF254DFF634EE34E06F6A464668AAFA7D55EBB"
+  },
+  {
+    "tag": "v1.12.3",
+    "url": "https://github.com/vadimcn/codelldb/releases/download/v1.12.3/codelldb-win32-x64.vsix",
+    "folder": "aethrix-lldb",
+    "kind": "extension",
+    "repo": "vadimcn/codelldb",
+    "asset": "codelldb-win32-x64.vsix",
+    "sha256": "A916E509308DAC817732F63CA604A8B93ED29CD16F38A2FA9F0B64ED58E8F51A"
+  },
+  {
+    "tag": "23.1.0",
+    "url": "https://github.com/clangd/clangd/releases/download/23.1.0/clangd-windows-23.1.0.zip",
+    "folder": "clangd-23.1.0",
+    "kind": "server",
+    "repo": "clangd/clangd",
+    "asset": "clangd-windows-23.1.0.zip",
+    "sha256": "23412A240756A162E7B98A282F36AA2A23A88DB5CE16A0CBC4FEF7253768C810"
+  }
+]

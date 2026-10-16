@@ -1,0 +1,169 @@
+{
+  "name": "localforge",
+  "displayName": "%displayName%",
+  "description": "%description%",
+  "publisher": "localforge",
+  "version": "0.7.0",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.110.0"
+  },
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "%trustDescription%"
+    }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "localforge.open",
+        "title": "%openTitle%",
+        "icon": "$(sparkle)"
+      },
+      {
+        "command": "localforge.newChat",
+        "title": "%newChatTitle%",
+        "icon": "$(add)"
+      },
+      {
+        "command": "localforge.search",
+        "title": "%searchTitle%",
+        "icon": "$(search)"
+      },
+      {
+        "command": "localforge.build",
+        "title": "%buildTitle%",
+        "icon": "$(tools)"
+      },
+      {
+        "command": "localforge.cppSetup",
+        "title": "%cppTitle%",
+        "icon": "$(settings-gear)"
+      },
+      {
+        "command": "localforge.debug",
+        "title": "%debugTitle%",
+        "icon": "$(debug-alt)"
+      },
+      {
+        "command": "localforge.changes",
+        "title": "%changesTitle%",
+        "icon": "$(diff)"
+      },
+      {
+        "command": "localforge.inlineEdit",
+        "title": "%inlineTitle%",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "localforge.models",
+        "title": "%modelsTitle%",
+        "icon": "$(server)"
+      },
+      {
+        "command": "localforge.resume",
+        "title": "%resumeTitle%",
+        "icon": "$(debug-continue)"
+      },
+      {
+        "command": "localforge.chatSearch",
+        "icon": "$(history)",
+        "title": "%chatSearchTitle%"
+      },
+      {
+        "command": "localforge.queue",
+        "icon": "$(list-ordered)",
+        "title": "%queueTitle%"
+      },
+      {
+        "command": "localforge.drivers",
+        "icon": "$(circuit-board)",
+        "title": "%driversTitle%"
+      },
+      {
+        "command": "localforge.installModels",
+        "title": "%installModelsTitle%",
+        "category": "Aethrix"
+      }
+    ],
+    "viewsContainers": {
+      "secondarySidebar": [
+        {
+          "id": "localforge",
+          "title": "Aethrix",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "localforge": [
+        {
+          "type": "webview",
+          "id": "localforge.assistant",
+          "name": "%viewTitle%"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "localforge.newChat",
+          "when": "view == localforge.assistant",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "localforge.inlineEdit",
+          "when": "editorHasSelection && resourceScheme == file",
+          "group": "modification@1"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Aethrix",
+      "properties": {
+        "localforge.model": {
+          "type": "string",
+          "default": "qwen3-coder:30b",
+          "description": "%modelDescription%"
+        },
+        "localforge.contextLength": {
+          "type": "number",
+          "default": 8192,
+          "minimum": 4096,
+          "maximum": 32768,
+          "description": "%contextDescription%"
+        },
+        "localforge.autoApprove": {
+          "type": "string",
+          "enum": [
+            "off",
+            "files",
+            "all"
+          ],
+          "default": "off",
+          "scope": "resource",
+          "description": "%approvalDescription%"
+        },
+        "localforge.symbolPath": {
+          "type": "string",
+          "description": "%symbolDescription%",
+          "default": ""
+        }
+      }
+    },
+    "keybindings": [
+      {
+        "command": "localforge.inlineEdit",
+        "when": "editorTextFocus && editorHasSelection",
+        "key": "ctrl+alt+e"
+      }
+    ]
+  }
+}
