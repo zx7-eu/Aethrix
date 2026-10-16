@@ -61,3 +61,17 @@ The debugger supports user-mode C++ programs. Windows kernel debugging needs a s
 - **Configure Symbol Path** selects Microsoft symbols with a private cache, adds a local PDB folder, or saves a custom path. **Open Dump in WinDbg** opens a selected Windows dump with those symbols. **Analyze Crash Dump** detects user/kernel dump headers, chooses CDB/KD, runs analysis/stack/module commands, and saves a local report. Stop cancels analysis. Symbol loading may download matching symbols; dump contents are not uploaded. **Explain Last Dump Analysis** sends a bounded excerpt of the report to your local model when you explicitly select it.
 
 The driver tools do not configure live kernel transports or change boot/signing settings. WinDbg remains available for interactive debugging and further analysis.
+
+## Aethrix Settings
+
+Use the gear at the top-left of chat, the gear in the assistant title bar, or Aethrix: Aethrix Settings from the command palette. The settings open in an editor tab with General, Plan & Usage, Agents, Models, Source Control, Browser & Network, Code Intelligence and Beta sections. Changes persist in the appropriate user or workspace preferences.
+
+Plan & Usage shows local counters starting with version 0.8: requests, outcomes, tool calls, reported tokens, running time, file edit operations and added/removed lines. Counts include repeated assistant edits; undo does not subtract historical work, and manual edits or shell effects are not counted. No subscription limits or billing are simulated. Completed local completion calls also contribute reported token counts.
+
+Models contains 44 verified local tags plus custom-tag entry, model visibility checkboxes, installed-model selection, memory/storage estimates and the existing live install checks and cancellation. The catalog is a selection, not the entire Ollama registry; enter another local tag for live inspection. Models retain their own licenses. A GPU fit estimate does not guarantee speed or driver support.
+
+Source Control detects installed Git and configures the native Git extension. Open a project folder; initialize a repository if needed. Stage changes before Commit Staged. Configure Git Author if a name/email is missing. Branches created here use the chosen prefix. Fetch/Pull/Push contact the configured remote and require workspace trust; Pull uses fast-forward only. Native Source Control and its diff editor remain available. Review Working Changes starts a read-only review of tracked changes.
+
+Aethrix local inline suggestions are opt-in under Code Intelligence and use the selected Ollama model. They can compete with chat for model resources. They run only in trusted file workspaces; Tab accepts a suggestion. Auto-import and format settings control the actual editor/language service and require a compatible formatter where applicable.
+
+The network page configures a loopback Ollama address, editor proxy, local preview destination and a connection check. The editor proxy applies to compatible editor/download features; Ollama uses its own local address directly. Beta offers local log viewing and a counters-only usage export.

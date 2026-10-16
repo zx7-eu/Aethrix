@@ -9,14 +9,270 @@ import { execFile } from 'node:child_process';
 export const GiB = 1073741824;
 export interface Hardware { cpu: string; cores: number; ram: number; availableRam: number; gpus: { name: string; memory: number }[]; modelPath: string; diskFree: number | null; warning?: string; scanned: string }
 export const modelCatalog = [
-	{ name: 'qwen2.5-coder:1.5b', size: 986000000, rank: 20, purpose: 'Lightweight coding' },
-	{ name: 'qwen2.5-coder:3b', size: 1900000000, rank: 35, purpose: 'Lightweight coding' },
-	{ name: 'qwen2.5-coder:7b', size: 4700000000, rank: 60, purpose: 'Coding' },
-	{ name: 'qwen2.5-coder:14b', size: 9000000000, rank: 80, purpose: 'Coding' },
-	{ name: 'qwen2.5-coder:32b', size: 20000000000, rank: 90, purpose: 'Coding' },
-	{ name: 'qwen3-coder:30b', size: 19000000000, rank: 100, purpose: 'Agentic coding' },
-	{ name: 'qwen3:8b', size: 5200000000, rank: 55, purpose: 'General reasoning and tools' },
-	{ name: 'deepseek-r1:70b', size: 43000000000, rank: 45, purpose: 'Reasoning; tool support varies' }
+	{
+		"name": "qwen2.5-coder:0.5b",
+		"size": 397821516,
+		"rank": 10,
+		"purpose": "Coding"
+	},
+	{
+		"name": "qwen2.5-coder:1.5b",
+		"size": 986062089,
+		"rank": 20,
+		"purpose": "Coding"
+	},
+	{
+		"name": "qwen2.5-coder:3b",
+		"size": 1929912626,
+		"rank": 35,
+		"purpose": "Coding"
+	},
+	{
+		"name": "qwen2.5-coder:7b",
+		"size": 4683087561,
+		"rank": 60,
+		"purpose": "Coding"
+	},
+	{
+		"name": "qwen2.5-coder:14b",
+		"size": 8988124298,
+		"rank": 80,
+		"purpose": "Coding"
+	},
+	{
+		"name": "qwen2.5-coder:32b",
+		"size": 19851349898,
+		"rank": 90,
+		"purpose": "Coding"
+	},
+	{
+		"name": "qwen3:0.6b",
+		"size": 522653767,
+		"rank": 10,
+		"purpose": "General chat; tool support varies"
+	},
+	{
+		"name": "qwen3:1.7b",
+		"size": 1359293444,
+		"rank": 10,
+		"purpose": "General chat; tool support varies"
+	},
+	{
+		"name": "qwen3:4b",
+		"size": 2497293931,
+		"rank": 10,
+		"purpose": "General chat; tool support varies"
+	},
+	{
+		"name": "qwen3:8b",
+		"size": 5225388164,
+		"rank": 10,
+		"purpose": "General chat; tool support varies"
+	},
+	{
+		"name": "qwen3:14b",
+		"size": 9276198565,
+		"rank": 10,
+		"purpose": "General chat; tool support varies"
+	},
+	{
+		"name": "qwen3:30b",
+		"size": 18556699314,
+		"rank": 10,
+		"purpose": "General chat; tool support varies"
+	},
+	{
+		"name": "qwen3:32b",
+		"size": 20201253829,
+		"rank": 10,
+		"purpose": "General chat; tool support varies"
+	},
+	{
+		"name": "qwen3:235b",
+		"size": 142154087123,
+		"rank": 10,
+		"purpose": "General chat; tool support varies"
+	},
+	{
+		"name": "qwen3-coder:30b",
+		"size": 18556700761,
+		"rank": 100,
+		"purpose": "Coding"
+	},
+	{
+		"name": "qwen3-coder:480b",
+		"size": 290058836445,
+		"rank": 110,
+		"purpose": "Coding"
+	},
+	{
+		"name": "deepseek-r1:1.5b",
+		"size": 1117322768,
+		"rank": 10,
+		"purpose": "Reasoning; tool support varies"
+	},
+	{
+		"name": "deepseek-r1:7b",
+		"size": 4683075440,
+		"rank": 10,
+		"purpose": "Reasoning; tool support varies"
+	},
+	{
+		"name": "deepseek-r1:8b",
+		"size": 5225376047,
+		"rank": 10,
+		"purpose": "Reasoning; tool support varies"
+	},
+	{
+		"name": "deepseek-r1:14b",
+		"size": 8988112209,
+		"rank": 10,
+		"purpose": "Reasoning; tool support varies"
+	},
+	{
+		"name": "deepseek-r1:32b",
+		"size": 19851337809,
+		"rank": 10,
+		"purpose": "Reasoning; tool support varies"
+	},
+	{
+		"name": "deepseek-r1:70b",
+		"size": 42520397873,
+		"rank": 10,
+		"purpose": "Reasoning; tool support varies"
+	},
+	{
+		"name": "deepseek-r1:671b",
+		"size": 404430190268,
+		"rank": 10,
+		"purpose": "Reasoning; tool support varies"
+	},
+	{
+		"name": "deepseek-coder-v2:16b",
+		"size": 8905126121,
+		"rank": 50,
+		"purpose": "Coding"
+	},
+	{
+		"name": "deepseek-coder-v2:236b",
+		"size": 132912470986,
+		"rank": 50,
+		"purpose": "Coding"
+	},
+	{
+		"name": "starcoder2:3b",
+		"size": 1709901728,
+		"rank": 50,
+		"purpose": "Coding"
+	},
+	{
+		"name": "starcoder2:7b",
+		"size": 4042813088,
+		"rank": 50,
+		"purpose": "Coding"
+	},
+	{
+		"name": "starcoder2:15b",
+		"size": 9065413313,
+		"rank": 50,
+		"purpose": "Coding"
+	},
+	{
+		"name": "codellama:7b",
+		"size": 3825910662,
+		"rank": 50,
+		"purpose": "Coding"
+	},
+	{
+		"name": "codellama:13b",
+		"size": 7365960935,
+		"rank": 50,
+		"purpose": "Coding"
+	},
+	{
+		"name": "codellama:34b",
+		"size": 19052049085,
+		"rank": 50,
+		"purpose": "Coding"
+	},
+	{
+		"name": "codellama:70b",
+		"size": 38872431643,
+		"rank": 50,
+		"purpose": "Coding"
+	},
+	{
+		"name": "gemma3:1b",
+		"size": 806067407,
+		"rank": 10,
+		"purpose": "General chat; tool support varies"
+	},
+	{
+		"name": "gemma3:4b",
+		"size": 3350272403,
+		"rank": 10,
+		"purpose": "General chat; tool support varies"
+	},
+	{
+		"name": "gemma3:12b",
+		"size": 8164039732,
+		"rank": 10,
+		"purpose": "General chat; tool support varies"
+	},
+	{
+		"name": "gemma3:27b",
+		"size": 17413409652,
+		"rank": 10,
+		"purpose": "General chat; tool support varies"
+	},
+	{
+		"name": "llama3.2:1b",
+		"size": 1321098329,
+		"rank": 10,
+		"purpose": "General chat; tool support varies"
+	},
+	{
+		"name": "llama3.2:3b",
+		"size": 2019393189,
+		"rank": 10,
+		"purpose": "General chat; tool support varies"
+	},
+	{
+		"name": "llama3.1:8b",
+		"size": 4920753328,
+		"rank": 10,
+		"purpose": "General chat; tool support varies"
+	},
+	{
+		"name": "llama3.1:70b",
+		"size": 42520412561,
+		"rank": 10,
+		"purpose": "General chat; tool support varies"
+	},
+	{
+		"name": "mistral:7b",
+		"size": 4372824384,
+		"rank": 10,
+		"purpose": "General chat; tool support varies"
+	},
+	{
+		"name": "phi4:14b",
+		"size": 9053116391,
+		"rank": 10,
+		"purpose": "General chat; tool support varies"
+	},
+	{
+		"name": "devstral:24b",
+		"size": 14333928046,
+		"rank": 50,
+		"purpose": "Coding"
+	},
+	{
+		"name": "codestral:22b",
+		"size": 12569170438,
+		"rank": 50,
+		"purpose": "Coding"
+	}
 ];
 /** Read dedicated GPU memory via DXGI rather than the truncated 32-bit WMI AdapterRAM field. */
 export async function scanHardware(script: string): Promise<Hardware> {

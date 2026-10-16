@@ -11,3 +11,5 @@ Ollama, model weights, Visual Studio Build Tools, .NET SDK, Windows SDK/WDK, Win
 This publication is a clean source snapshot with Aethrix changes, not a transfer of the local development Git history. Upstream workflows requiring Microsoft infrastructure are omitted. Generated output, development profiles, chats and private test evidence are excluded. No model weights or private project source are included.
 
 Upstream Copilot simulation SQLite caches (98 Git LFS objects) are omitted. They are not Aethrix application source or runtime requirements and are not needed for the assistant tests or production editor. Full upstream Copilot simulation tests require the separately obtained upstream cache data.
+
+Version 0.8 bundles jsonc-parser for importing commented editor preferences and jsdiff for counting changed lines. Their MIT/BSD notices are preserved as media/jsonc-parser.LICENSE.txt and media/diff.LICENSE.txt in the assistant source and extracted application.

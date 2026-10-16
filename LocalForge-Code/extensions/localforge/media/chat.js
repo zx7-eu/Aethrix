@@ -6,6 +6,10 @@ const vscode = acquireVsCodeApi();
 const L = labels;
 const $ = id => document.getElementById(id);
 let current = null;
+let response = null;
+let activity = null;
+let activityCount = 0;
+let preferences = { ctrlEnter: true, detailed: false, sound: false, showUsage: true };
 let busy = false;
 let clock;
 let started = 0;
@@ -178,21 +182,46 @@ function add(role, text, kind = '') {
 	wrap.append(title, content); $('messages').append(wrap);
 	return content;
 }
+function resetResponse() { current = null; response = null; activity = null; activityCount = 0; }
+function responseBody() {
+	if (!response) { current = add('Aethrix', ''); response = current.closest('.message'); }
+	return current;
+}
+function activityBody() {
+	responseBody();
+	if (!activity) {
+		activity = document.createElement('details'); activity.className = 'responseActivity';
+		activity.open = preferences.detailed;
+		const summary = document.createElement('summary'); summary.textContent = L.toolsMenu || 'Tools';
+		activity.append(summary); response.insertBefore(activity, current);
+	}
+	return activity;
+}
+function archiveProgress() {
+	if (current?.dataset.raw) {
+		const note = document.createElement('div'); note.className = 'activityNote';
+		render(note, current.dataset.raw); activityBody().append(note);
+		delete current.dataset.raw; current.replaceChildren(); current.dataset.pending = 'true';
+	}
+}
 function tool(text, output) {
+	archiveProgress();
 	const element = document.createElement('details'); element.className = 'tool';
 	const summary = document.createElement('summary');
 	summary.textContent = text.split('\n')[0].slice(0, 180);
 	const details = document.createElement('pre'); details.textContent = output || text;
 	element.append(summary, details);
-	$('messages').append(element);
+	activityBody().append(element);
+	activityCount++; activity.firstElementChild.textContent = `${L.toolsMenu || 'Tools'} · ${activityCount}`;
 }
 function scroll() { $('messages').scrollTop = $('messages').scrollHeight; }
 function transcript(entries) {
-	$('messages').replaceChildren(); current = null;
+	$('messages').replaceChildren(); resetResponse();
 	if (!entries.length) { welcome(); }
 	for (const entry of entries) {
 		if (entry.role === 'tool' || entry.role === 'info') { tool(entry.text); }
-		else if (entry.text) { add(entry.role === 'user' ? 'You' : 'Aethrix', entry.text, entry.role === 'user' ? 'user' : entry.role === 'error' ? 'error' : ''); }
+		else if (entry.text && entry.role === 'assistant') { archiveProgress(); const body = responseBody(); render(body, entry.text); body.dataset.raw = entry.text; delete body.dataset.pending; }
+		else if (entry.text) { if (entry.role === 'user') { resetResponse(); } add(entry.role === 'user' ? 'You' : 'Aethrix', entry.text, entry.role === 'user' ? 'user' : 'error'); }
 	}
 	scroll();
 }
@@ -220,7 +249,7 @@ for (const action of ['Open', 'Model', 'Build']) {
 	if (button) { button.textContent = L['plan' + action]; button.onclick = () => post('planAction', { action: action.toLowerCase() }); }
 }
 $('send').textContent = L.send; $('cancel').textContent = L.cancel;
-$('cancel').disabled = true; $('context').textContent = L.context;
+$('cancel').disabled = true; $('cancel').hidden = true; $('context').textContent = L.context;
 $('prompt').placeholder = L.placeholder; $('prompt').value = state.draft || '';
 $('connection').textContent = L.checking; $('status').textContent = L.ready;
 $('reconnect').title = L.reconnect; $('reset').title = L.newChat;
@@ -229,11 +258,15 @@ for (const option of $('approval').options) { option.textContent = { off: L.ask,
 $('history').title = L.saved;
 $('history').onchange = () => post('selectChat', { id: $('history').value });
 $('approval').onchange = () => post('approval', { mode: $('approval').value });
-$('send').onclick = send; $('cancel').onclick = () => post('cancel');
+$('send').onclick = () => {
+	if (busy) { $('send').disabled = true; post('cancel'); }
+	else { send(); }
+};
+$('cancel').onclick = () => post('cancel');
 $('reset').onclick = () => post('reset'); $('reconnect').onclick = () => post('check');
 $('model').onchange = () => post('model', { model: $('model').value });
 $('prompt').oninput = () => vscode.setState({ draft: $('prompt').value });
-$('prompt').onkeydown = event => { if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) { event.preventDefault(); send(); } };
+$('prompt').onkeydown = event => { if (event.key === 'Enter' && !event.isComposing && ((preferences.ctrlEnter && (event.ctrlKey || event.metaKey)) || (!preferences.ctrlEnter && !event.shiftKey))) { event.preventDefault(); send(); } };
 welcome();
 window.addEventListener('message', ({ data: message }) => {
 	if ($('installerPanel')) {
@@ -292,19 +325,34 @@ window.addEventListener('message', ({ data: message }) => {
 	}
 	if (message.type === 'file') { $('file').textContent = message.name ? '· ' + message.name : ''; }
 	if (message.type === 'busy') {
+		const wasBusy = busy;
 		busy = message.value;
+		if (wasBusy && !busy && preferences.sound) { try { const audio = new AudioContext(); const oscillator = audio.createOscillator(); const gain = audio.createGain(); gain.gain.value = .035; oscillator.frequency.value = 660; oscillator.connect(gain); gain.connect(audio.destination); oscillator.start(); oscillator.stop(audio.currentTime + .12); oscillator.onended = () => audio.close(); } catch { /* Sound is optional. */ } }
 		if ($('useInstalledModel')) { $('useInstalledModel').disabled = busy || installerPulling; }
 		for (const id of ['mode', 'planOpen', 'planModel', 'planBuild']) { if ($(id)) { $(id).disabled = busy; } }
 		clearInterval(clock);
 		if ($('progress')) { $('progress').hidden = !busy; }
-		if (busy) { started = Date.now(); updateClock(); clock = setInterval(updateClock, 1000); }
+		if (busy) { resetResponse(); started = Date.now(); updateClock(); clock = setInterval(updateClock, 1000); }
 		if ($('checkpointBar')) { $('checkpointBar').hidden = busy || !hasCheckpoint; }
 		for (const button of document.querySelectorAll('[data-action], #attachFile, #attachFolder')) { button.disabled = (busy && button.dataset.action !== 'queue') || (button.id === 'fixBuild' && !button.dataset.ready); }
-		$('send').disabled = busy; $('model').disabled = busy; $('history').disabled = busy;
+		$('send').disabled = false; $('send').textContent = busy ? L.cancel : L.send;
+		$('send').classList.toggle('stopAgent', busy); $('send').setAttribute('aria-label', busy ? L.cancel : L.send);
+		$('model').disabled = busy; $('history').disabled = busy;
 		$('reset').disabled = busy; $('cancel').disabled = !busy;
-		if (!busy && current?.dataset.pending) { current.closest('.message').remove(); current = null; }
+		if (!busy && current?.dataset.pending) { if (activity) { current.replaceChildren(); } else { response?.remove(); resetResponse(); } }
 	}
 	if (message.type === 'checkpoint') { hasCheckpoint = message.available; if ($('checkpointBar')) { $('checkpointBar').hidden = busy || !hasCheckpoint; $('checkpointText').textContent = `${L.interrupted} · ${message.completed} saved steps`; } }
+	if (message.type === 'preferences') {
+		preferences = message; $('messages').style.fontSize = `${Math.max(10, Math.min(22, message.fontSize || 13))}px`;
+		document.body.classList.toggle('wrapCode', !!message.wrap);
+		for (const details of document.querySelectorAll('.responseActivity')) { details.open = !!message.detailed; }
+		if ($('localUsage')) { $('localUsage').hidden = !message.showUsage; }
+	}
+	if (message.type === 'usageSummary') { const usage = message.usage; if ($('localUsage')) { $('localUsage').textContent = `${usage.requests} requests · +${usage.linesAdded} / −${usage.linesRemoved} lines`; $('localUsage').hidden = !preferences.showUsage; } }
+	if (message.type === 'modelChoices') {
+		let list = $('installedModelChoices'); if (!list) { list = document.createElement('datalist'); list.id = 'installedModelChoices'; document.body.append(list); $('model').setAttribute('list', list.id); }
+		list.replaceChildren(); for (const name of message.models) { const option = document.createElement('option'); option.value = name; list.append(option); }
+	}
 	if (message.type === 'modelInventory') { showModels(message); }
 	if (message.type === 'showChatSearch' && $('chatSearchPanel')) { $('chatSearchPanel').open = true; $('chatQuery').focus(); }
 	if (message.type === 'chatSearchResults') { showChatResults(message); }
@@ -329,14 +377,15 @@ window.addEventListener('message', ({ data: message }) => {
 		}
 	}
 	if (message.type === 'reset') { transcript([]); }
-	if (message.type === 'user') { $('messages').querySelector('.welcome')?.remove(); add('You', message.text, 'user'); }
+	if (message.type === 'user') { resetResponse(); $('messages').querySelector('.welcome')?.remove(); add('You', message.text, 'user'); }
 	if (message.type === 'assistantStart') {
-		if (current?.dataset.pending) { current.closest('.message').remove(); }
-		current = add('Aethrix', L.working); current.dataset.pending = 'true'; $('status').textContent = L.working;
+		archiveProgress(); current = responseBody(); current.textContent = L.working; current.dataset.pending = 'true'; $('status').textContent = L.working;
 	}
-	if (message.type === 'assistant' && current && message.text.trim()) { delete current.dataset.pending; render(current, message.text); }
+	if (message.type === 'assistant' && current && message.text.trim()) { delete current.dataset.pending; current.dataset.raw = message.text; render(current, message.text); }
 	if (message.type === 'tool' || message.type === 'info') { tool(message.text, message.output); }
 	if (message.type === 'error') { add('Aethrix', message.text, 'error'); $('status').textContent = message.text; if ($('enqueueRequest')) { $('enqueueRequest').disabled = false; } }
 	scroll();
 });
 post('ready');
+
+if (document.getElementById('aethrixSettings')) { document.getElementById('aethrixSettings').onclick = () => post('settings'); }

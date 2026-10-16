@@ -4,14 +4,15 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { recoverToolCalls, visibleResponseText } from './toolProtocol';
+import { ollamaEndpoint } from './localRuntime';
 
 export interface ToolCall { function: { name: string; arguments: Record<string, string> } }
-export interface Message { role: 'system' | 'user' | 'assistant' | 'tool'; content: string; tool_calls?: ToolCall[]; tool_name?: string }
+export interface Message { role: 'system' | 'user' | 'assistant' | 'tool'; content: string; tool_calls?: ToolCall[]; tool_name?: string; usage?: { inputTokens: number; outputTokens: number } }
 export interface Tool { type: 'function'; function: { name: string; description: string; parameters: { type: 'object'; properties: Record<string, { type: string; description?: string }>; required: string[] } } }
-interface Chunk { error?: string; done?: boolean; done_reason?: string; message?: { content?: string; thinking?: string; tool_calls?: ToolCall[] } }
+interface Chunk { error?: string; done?: boolean; done_reason?: string; prompt_eval_count?: number; eval_count?: number; message?: { content?: string; thinking?: string; tool_calls?: ToolCall[] } }
 
 /** Streams a local model response with bounded startup and idle times. */
-export async function streamChat(model: string, messages: Message[], tools: Tool[], contextLength: number, signal: AbortSignal, onText: (text: string) => void, onProgress: (seconds: number, received: boolean) => void, endpoint = 'http://127.0.0.1:11434'): Promise<Message> {
+export async function streamChat(model: string, messages: Message[], tools: Tool[], contextLength: number, signal: AbortSignal, onText: (text: string) => void, onProgress: (seconds: number, received: boolean) => void, endpoint = ollamaEndpoint()): Promise<Message> {
 	const controller = new AbortController();
 	const cancel = () => controller.abort(signal.reason);
 	signal.addEventListener('abort', cancel, { once: true });
@@ -38,13 +39,14 @@ export async function streamChat(model: string, messages: Message[], tools: Tool
 		let completed = false;
 		let truncated = false;
 		const calls: ToolCall[] = [];
+		let usage: Message['usage'];
 		const consume = (line: string) => {
 			if (!line.trim()) { return; }
 			const chunk = JSON.parse(line) as Chunk;
 			if (chunk.error) { throw new Error(chunk.error); }
 			if (chunk.message?.content) { content += chunk.message.content; onText(visibleResponseText(content)); }
 			if (chunk.message?.tool_calls) { calls.push(...chunk.message.tool_calls); }
-			if (chunk.done) { completed = true; truncated = chunk.done_reason === 'length'; }
+			if (chunk.done) { completed = true; truncated = chunk.done_reason === 'length'; if (Number.isFinite(chunk.prompt_eval_count) && Number.isFinite(chunk.eval_count)) { usage = { inputTokens: Math.max(0, chunk.prompt_eval_count!), outputTokens: Math.max(0, chunk.eval_count!) }; } }
 		};
 		try {
 			while (true) {
@@ -63,7 +65,7 @@ export async function streamChat(model: string, messages: Message[], tools: Tool
 				const recovered = recoverToolCalls(content, tools);
 				content = recovered.content; calls.push(...recovered.calls);
 			} else { content = visibleResponseText(content); }
-			return { role: 'assistant', content, ...(calls.length ? { tool_calls: calls } : {}) };
+			return { role: 'assistant', content, ...(calls.length ? { tool_calls: calls } : {}), ...(usage ? { usage } : {}) };
 		} finally { await reader.cancel().catch(() => { }); reader.releaseLock(); }
 	} catch (error) {
 		if (timedOut) { throw new Error('Ollama stopped responding. The request was canceled. Check the model and retry with less context.'); }

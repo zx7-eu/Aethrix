@@ -1,11 +1,18 @@
-# Aethrix 0.7.0 — first public Windows release
+# Aethrix 0.8.0 — settings, local usage and source control
 
-A free local-model coding editor built on Code - OSS 1.143.0.
+Download **Aethrix-0.8.0-windows-x64.zip** for the standalone EXE, setup guide, requirements, official dependency links and licenses. The individual EXE and SHA256SUMS.txt are also available.
 
-Download **Aethrix-0.7.0-windows-x64.zip** for the prebuilt EXE, first-run guide, full requirements, official dependency shortcuts and license notices. The individual EXE and SHA256SUMS.txt are also attached. GitHub's Source code archives contain the source snapshot and build instructions.
+## Changes
 
-Includes a hardware-aware Ollama model installer; Normal, Plan, Debug, Multi-task and Ask workflows; project file/command tools with approval controls and native diffs; automatically titled chat history; queues and interrupted-request recovery; C++ and Windows driver helpers; and Open VSX extension support.
+- Separate Aethrix Settings with General, Plan & Usage, Agents, Models, Source Control, Browser & Network, Code Intelligence and Beta sections. No Voice, Cloud Agents, Customize or Docs tabs.
+- Local usage and line-edit statistics. Counts start with this version; completed-response tokens are recorded only when Ollama reports them.
+- 44 verified local Ollama model tags, custom tags, model visibility controls, hardware fit estimates, live download-size checks, low-storage blocking and cancellation.
+- Git discovery and native source control, staging/unstaging, commits, branches, diffs, fetch/pull/push and read-only review. Git author configuration is available; remote authentication and repository setup are still required.
+- One continuous agent response, grouped tool activity, a red Stop control, and a guard against repetitive repository-overview reads.
+- Opt-in local inline suggestions, editor preferences, local preview controls and an Ollama connection check.
 
-Windows x64 only. Ollama and model weights are separate downloads. Compilers/SDKs/WDK/WinDbg are optional, task-specific requirements and are not bundled. The EXE is unsigned. Hardware estimates are approximate and do not guarantee inference speed. This is an early release; review changes before applying them.
+## Validation
 
-No personal chats, credentials, private projects or model weights are included. MIT and applicable third-party licenses are preserved. See README.md, NOTICE.md, BUILDING.md and release/REQUIREMENTS.md in the repository.
+39 regression tests passed, along with settings/chat browser checks and an actual packaged-editor integration check for settings persistence and native Git staging/commit. Model tags and sizes were checked against the official Ollama registry without downloading model weights.
+
+Windows x64. The EXE is unsigned. Ollama and model weights are separate downloads; compilers/SDKs/WDK/WinDbg are optional task-specific dependencies. Fit estimates do not guarantee speed or GPU support. No personal chats, credentials, model weights or private project source are included. Existing profiles are retained on update.

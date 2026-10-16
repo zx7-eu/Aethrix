@@ -15,6 +15,7 @@ Run in PowerShell from the repository root:
 ```powershell
 Set-Location LocalForge-Code
 npm install
+npm install --prefix extensions/localforge --ignore-scripts
 node node_modules/@typescript/native/lib/tsc.js -p extensions/localforge/tsconfig.json --pretty false
 node --test extensions/localforge/test/*.test.cjs
 node --experimental-strip-types extensions/localforge/esbuild.mts --production

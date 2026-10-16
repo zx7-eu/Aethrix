@@ -4,6 +4,15 @@ A free Windows coding editor with a local Ollama assistant, built on the MIT-lic
 
 **[Download the Windows EXE and setup folder](https://github.com/zx7-eu/Aethrix/releases/latest)** · [Requirements](release/REQUIREMENTS.md) · [First run](release/START-HERE.md) · [User guide](USER-GUIDE.md) · [Build from source](BUILDING.md)
 
+## New in 0.8.0
+
+- A separate Aethrix Settings page with a top-left chat gear and persistent preferences.
+- Local usage counters: requests, outcomes, reported tokens, tool calls, time, file edit operations and line additions/removals. Tracking starts with this version; historical activity is not reconstructed.
+- A catalog of 44 verified local model tags, custom tags, visibility controls and live hardware/storage checks before installation.
+- Working native Git integration plus staging, commits, branch creation, diffs, remote operations and read-only change review.
+- One continuous response per request, collapsed tool activity and a visible red Stop control. Repository overviews stop repetitive file paging.
+- Opt-in local inline suggestions, editor/language preferences and local network diagnostics.
+
 ## What makes Aethrix different
 
 Aethrix brings local models, a full editor, and Windows development tools together in one application:
@@ -19,7 +28,7 @@ This is a particular combination of features, not a claim that every individual 
 
 ## Choose your download
 
-**Just use the app:** get `Aethrix-0.7.0-windows-x64.zip` from Releases, extract it, and read `START-HERE.md`. It contains `Aethrix.exe`, requirements, official dependency links and license notices. A separate `Aethrix.exe` asset is also available. You do not need Node.js, .NET or a source checkout to run the editor.
+**Just use the app:** get `Aethrix-0.8.0-windows-x64.zip` from Releases, extract it, and read `START-HERE.md`. It contains `Aethrix.exe`, requirements, official dependency links and license notices. A separate `Aethrix.exe` asset is also available. You do not need Node.js, .NET or a source checkout to run the editor.
 
 **Read or build the source:** browse `LocalForge-Code/` and `LocalForge-Packaging/`, or use GitHub's source download. Build prerequisites and packaging steps are in [BUILDING.md](BUILDING.md). Large generated binaries are release assets rather than Git-tracked source files.
 
@@ -48,4 +57,8 @@ This is not an air-gapped application: downloads, model registry checks, extensi
 
 The public repository is read-only for visitors: only people explicitly granted write access can change this repository. No public write access is granted by publishing it. The source remains under MIT and applicable third-party licenses, which permit copying, forking and modification; “read-only” does not revoke those rights. Contributions are currently maintainer-managed; see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-Aethrix is independently branded and is not an official Microsoft Visual Studio Code distribution. The editor source derives from [microsoft/vscode](https://github.com/microsoft/vscode), commit `743b7f939f37a9c2a59f1e2177335db6e5735a1f`. Upstream MIT notices and third-party licenses are preserved. See [LICENSE.txt](LICENSE.txt), [ThirdPartyNotices.txt](ThirdPartyNotices.txt), and [NOTICE.md](NOTICE.md). Assistant version: **0.7.0**; editor base: **1.143.0**.
+Aethrix is independently branded and is not an official Microsoft Visual Studio Code distribution. The editor source derives from [microsoft/vscode](https://github.com/microsoft/vscode), commit `743b7f939f37a9c2a59f1e2177335db6e5735a1f`. Upstream MIT notices and third-party licenses are preserved. See [LICENSE.txt](LICENSE.txt), [ThirdPartyNotices.txt](ThirdPartyNotices.txt), and [NOTICE.md](NOTICE.md). Assistant version: **0.8.0**; editor base: **1.143.0**.
+
+## Aethrix Settings
+
+![Aethrix Settings](screenshots/settings.png)

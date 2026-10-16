@@ -75,3 +75,9 @@ footer{padding:10px 12px 9px;border-top:0;flex-shrink:0}
 #status{display:block;flex:1;min-width:0;font-size:10px}.hint{margin:0;font-size:9px;white-space:nowrap;opacity:.7}
 #workflowPanel{font-size:12px;line-height:1.6;background:var(--vscode-editorGroupHeader-tabsBackground);margin:8px 12px 0;border:1px solid var(--vscode-panel-border);border-radius:7px;padding:10px}
 @media(max-height:600px){#prompt{height:62px}header{padding-top:7px;padding-bottom:6px}.chatTop{margin-bottom:3px}.welcome{margin:10px 0}}
+
+.responseActivity{margin:0 0 12px;color:var(--vscode-descriptionForeground);font-size:11px}.responseActivity>summary{cursor:pointer;padding:5px 0}.responseActivity .tool{margin:8px 0}.activityNote{font-size:11px;opacity:.85;margin:8px 0}.message>.content:empty{display:none}
+
+#send.stopAgent{background:#9e3434;color:#fff;border:1px solid #bd5151;min-width:64px}#send.stopAgent:hover{background:#b03b3b}#send.stopAgent:disabled{opacity:.65}
+
+#aethrixSettings{font-size:17px;flex-shrink:0;padding:4px 7px;background:transparent;border-color:transparent}.wrapCode .markdown pre,.wrapCode .markdown pre code{white-space:pre-wrap;overflow-wrap:anywhere}#localUsage{font-size:9px;color:var(--vscode-descriptionForeground);margin-left:5px}

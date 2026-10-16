@@ -20,5 +20,20 @@
   "queueTitle": "Aethrix: Request Queue",
   "driversTitle": "Aethrix: Windows Driver Tools",
   "symbolDescription": "Symbol path passed to WinDbg and dump analyzers. Empty uses Microsoft symbols with a private local cache.",
-  "installModelsTitle": "Install Models"
+  "installModelsTitle": "Install Models",
+  "settingsTitle": "Aethrix Settings",
+  "chatFontSizeDescription": "Configure chat font size in Aethrix Settings.",
+  "submitWithCtrlEnterDescription": "Configure submit with ctrl enter in Aethrix Settings.",
+  "codeBlockWrapDescription": "Configure code block wrap in Aethrix Settings.",
+  "detailedToolsDescription": "Configure detailed tools in Aethrix Settings.",
+  "usageSummaryDescription": "Configure usage summary in Aethrix Settings.",
+  "endpointDescription": "Configure endpoint in Aethrix Settings.",
+  "completionNotificationDescription": "Configure completion notification in Aethrix Settings.",
+  "completionSoundDescription": "Configure completion sound in Aethrix Settings.",
+  "openLocalInBrowserDescription": "Configure open local in browser in Aethrix Settings.",
+  "branchPrefixDescription": "Configure branch prefix in Aethrix Settings.",
+  "commitAttributionDescription": "Configure commit attribution in Aethrix Settings.",
+  "inlineCompletionDescription": "Configure inline completion in Aethrix Settings.",
+  "suggestInCommentsDescription": "Configure suggest in comments in Aethrix Settings.",
+  "whitespaceSuggestionsDescription": "Configure whitespace suggestions in Aethrix Settings."
 }

@@ -35,6 +35,13 @@ test('reports Ollama HTTP errors instead of hanging', async () => {
 		await assert.rejects(streamChat('missing', [], [], 8192, new AbortController().signal, () => { }, () => { }, endpoint), /404.*model is not installed/);
 	});
 });
+
+test('usage tokens come from the completed Ollama response rather than estimates', async () => {
+	await server((_, response) => response.end(JSON.stringify({ message: { content: 'done' }, done: true, prompt_eval_count: 123, eval_count: 17 }) + '\n'), async endpoint => {
+		const reply = await streamChat('test', [], [], 8192, new AbortController().signal, () => {}, () => {}, endpoint);
+		assert.deepEqual(reply.usage, { inputTokens: 123, outputTokens: 17 });
+	});
+});
 test('cancel interrupts a model that has not returned headers', async () => {
 	await server(() => { }, async endpoint => {
 		const controller = new AbortController();

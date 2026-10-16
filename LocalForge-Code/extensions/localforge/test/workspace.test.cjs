@@ -29,7 +29,7 @@ test('bundled assistant enforces workspace boundaries and produces valid webview
 			onDidChangeActiveTextEditor: () => disposable,
 			registerWebviewViewProvider: (_, value) => { provider = value; return disposable; }
 		},
-		workspace: { isTrusted: true, workspaceFolders: [{ uri: { fsPath: root } }], registerTextDocumentContentProvider: () => disposable, getConfiguration: () => ({ get: () => approvalMode }) },
+		workspace: { isTrusted: true, workspaceFolders: [{ uri: { fsPath: root } }], registerTextDocumentContentProvider: () => disposable, getConfiguration: () => ({ get: (key, fallback) => key === 'autoApprove' ? approvalMode : fallback }) },
 		commands: { registerCommand: () => disposable }
 	};
 	const exports = {};
@@ -51,9 +51,9 @@ test('bundled assistant enforces workspace boundaries and produces valid webview
 		onText('Saved assistant response');
 		return { role: 'assistant', content: 'Saved assistant response' };
 	} };
-	vm.runInNewContext(fs.readFileSync(file, 'utf8'), { exports, require: name => name === 'vscode' ? vscode : name === './ollama' ? transport : name === './cppSupport' ? {} : name === './modelAdvisor' ? { ...nativeRequire(name), scanHardware: async () => installHardware, inspectModel: async name => ({ name, size: installSize }) } : name === './modelManager' ? { modelInventory: async () => [{ name: 'test-model', disk: 1e9 }], pullModel: async () => { installedPulls++; } } : nativeRequire(name), Buffer, AbortController, AbortSignal, setInterval, clearInterval, setTimeout, clearTimeout, process, console }, { filename: file });
+	vm.runInNewContext(fs.readFileSync(file, 'utf8'), { exports, require: name => name === 'vscode' ? vscode : name === './settingsPanel' ? { AethrixSettings: class { event() {} dispose() {} open() {} } } : name === './inlineCompletion' ? { registerLocalCompletion() {} } : name === './ollama' ? transport : name === './cppSupport' ? {} : name === './modelAdvisor' ? { ...nativeRequire(name), scanHardware: async () => installHardware, inspectModel: async name => ({ name, size: installSize }) } : name === './modelManager' ? { modelInventory: async () => [{ name: 'test-model', disk: 1e9 }], pullModel: async () => { installedPulls++; } } : nativeRequire(name), Buffer, AbortController, AbortSignal, setInterval, clearInterval, setTimeout, clearTimeout, process, console }, { filename: file });
 	let activeId; const savedState = new Map();
-	const context = { subscriptions: [], globalState: { get: () => true }, workspaceState: { get: key => key === 'localforge.activeChat' ? activeId : savedState.get(key), update: async (key, value) => { if (key === 'localforge.activeChat') { activeId = value; } else { savedState.set(key, value); } } }, globalStorageUri: { fsPath: path.join(root, 'chat-storage', randomUUID()) } };
+	const context = { subscriptions: [], globalState: { get: (key, fallback) => key === 'welcomed' ? true : fallback }, workspaceState: { get: key => key === 'localforge.activeChat' ? activeId : savedState.get(key), update: async (key, value) => { if (key === 'localforge.activeChat') { activeId = value; } else { savedState.set(key, value); } } }, globalStorageUri: { fsPath: path.join(root, 'chat-storage', randomUUID()) } };
 	context.extensionUri = { fsPath: path.resolve(__dirname, '..') };
 	exports.activate(context);
 	assert.equal(await provider.resolve('main.cpp'), path.join(root, 'main.cpp'));

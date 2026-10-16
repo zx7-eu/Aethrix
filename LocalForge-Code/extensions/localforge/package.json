@@ -3,7 +3,7 @@
   "displayName": "%displayName%",
   "description": "%description%",
   "publisher": "localforge",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "license": "MIT",
   "engines": {
     "vscode": "^1.110.0"
@@ -89,6 +89,12 @@
         "command": "localforge.installModels",
         "title": "%installModelsTitle%",
         "category": "Aethrix"
+      },
+      {
+        "command": "localforge.settings",
+        "title": "%settingsTitle%",
+        "category": "Aethrix",
+        "icon": "$(gear)"
       }
     ],
     "viewsContainers": {
@@ -111,6 +117,11 @@
     },
     "menus": {
       "view/title": [
+        {
+          "command": "localforge.settings",
+          "when": "view == localforge.assistant",
+          "group": "navigation@0"
+        },
         {
           "command": "localforge.newChat",
           "when": "view == localforge.assistant",
@@ -155,6 +166,78 @@
           "type": "string",
           "description": "%symbolDescription%",
           "default": ""
+        },
+        "localforge.chatFontSize": {
+          "type": "number",
+          "default": 13,
+          "description": "%chatFontSizeDescription%",
+          "minimum": 10,
+          "maximum": 22
+        },
+        "localforge.submitWithCtrlEnter": {
+          "type": "boolean",
+          "default": true,
+          "description": "%submitWithCtrlEnterDescription%"
+        },
+        "localforge.codeBlockWrap": {
+          "type": "boolean",
+          "default": false,
+          "description": "%codeBlockWrapDescription%"
+        },
+        "localforge.detailedTools": {
+          "type": "boolean",
+          "default": false,
+          "description": "%detailedToolsDescription%"
+        },
+        "localforge.usageSummary": {
+          "type": "boolean",
+          "default": true,
+          "description": "%usageSummaryDescription%"
+        },
+        "localforge.endpoint": {
+          "type": "string",
+          "default": "http://127.0.0.1:11434",
+          "description": "%endpointDescription%"
+        },
+        "localforge.completionNotification": {
+          "type": "boolean",
+          "default": false,
+          "description": "%completionNotificationDescription%"
+        },
+        "localforge.completionSound": {
+          "type": "boolean",
+          "default": false,
+          "description": "%completionSoundDescription%"
+        },
+        "localforge.openLocalInBrowser": {
+          "type": "boolean",
+          "default": true,
+          "description": "%openLocalInBrowserDescription%"
+        },
+        "localforge.branchPrefix": {
+          "type": "string",
+          "default": "aethrix/",
+          "description": "%branchPrefixDescription%"
+        },
+        "localforge.commitAttribution": {
+          "type": "boolean",
+          "default": false,
+          "description": "%commitAttributionDescription%"
+        },
+        "localforge.inlineCompletion": {
+          "type": "boolean",
+          "default": false,
+          "description": "%inlineCompletionDescription%"
+        },
+        "localforge.suggestInComments": {
+          "type": "boolean",
+          "default": false,
+          "description": "%suggestInCommentsDescription%"
+        },
+        "localforge.whitespaceSuggestions": {
+          "type": "boolean",
+          "default": false,
+          "description": "%whitespaceSuggestionsDescription%"
         }
       }
     },
@@ -165,5 +248,8 @@
         "key": "ctrl+alt+e"
       }
     ]
+  },
+  "dependencies": {
+    "jsonc-parser": "3.3.1"
   }
 }
